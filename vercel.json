@@ -1,1 +1,18 @@
-
+// vercel.json
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/api/.*",
+      "dest": "https://tu-backend.herokuapp.com/api/$1",
+      "methods": ["GET", "POST"]
+    }
+  ]
+}

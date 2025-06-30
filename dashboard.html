@@ -1472,6 +1472,55 @@ function actualizarAguja(power, max = 2000) {
 }
 
 setInterval(actualizarDatos, 5000);
+        <!-- Añade esta tarjeta en tu dashboard -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Control de Conexión</h2>
+        <i class="fas fa-power-off card-icon"></i>
+    </div>
+    <button id="connection-toggle" class="login-button">
+        <i class="fas fa-plug"></i> Conectado
+    </button>
+</div>
+        // Control del LED
+const ledButton = document.getElementById('connection-toggle');
+let isConnected = true;
+
+ledButton.addEventListener('click', async () => {
+    isConnected = !isConnected;
+    
+    try {
+        const response = await fetch('https://tunombre.pythonanywhere.com/api/led-control', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: isConnected })
+        });
+        
+        const result = await response.json();
+        if (result.status === isConnected) {
+            ledButton.innerHTML = `<i class="fas fa-plug"></i> ${isConnected ? 'Conectado' : 'Desconectado'}`;
+            ledButton.style.background = isConnected ? 
+                'linear-gradient(90deg, var(--firebase-green), var(--firebase-blue))' :
+                'linear-gradient(90deg, var(--firebase-red), var(--firebase-yellow))';
+        }
+    } catch (error) {
+        console.error("Error controlando LED:", error);
+    }
+});
+        <!-- Añade esta tarjeta en tu dashboard -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Exportar Datos</h2>
+        <i class="fas fa-file-excel card-icon"></i>
+    </div>
+    <a href="https://tunombre.pythonanywhere.com/api/export-data" download>
+        <button class="login-button">
+            <i class="fas fa-download"></i> Descargar Excel
+        </button>
+    </a>
+</div>
     </script>
 </body>
 </html>

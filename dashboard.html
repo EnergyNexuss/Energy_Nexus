@@ -1441,6 +1441,37 @@
             updateDateTime();
             setInterval(updateDateTime, 1000);
         });
+        // Actualizar cada 5 segundos
+async function actualizarDatos() {
+    try {
+        const response = await fetch('https://tunombre.pythonanywhere.com/api/latest-data');
+        const data = await response.json();
+        
+        if (data && data.power) {
+            // Actualizar medidor
+            document.querySelector('.gauge-value').textContent = data.power.toFixed(0);
+            actualizarAguja(data.power);
+            
+            // Actualizar otros valores
+            document.querySelector('[data-label="Voltaje"] .data-value').textContent = 
+                data.voltage.toFixed(1);
+            document.querySelector('[data-label="Corriente"] .data-value').textContent = 
+                data.current.toFixed(2);
+            // ... otros campos
+        }
+    } catch (error) {
+        console.error("Error obteniendo datos:", error);
+    }
+}
+
+function actualizarAguja(power, max = 2000) {
+    const porcentaje = Math.min(power / max, 1);
+    const angulo = -135 + (270 * porcentaje);
+    document.getElementById('power-needle').style.transform = 
+        `translateX(-50%) rotate(${angulo}deg)`;
+}
+
+setInterval(actualizarDatos, 5000);
     </script>
 </body>
 </html>

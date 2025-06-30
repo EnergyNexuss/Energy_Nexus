@@ -1,1 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnergyNexus - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --color-primary: #0f0c29;
+            --color-secondary: #00f7ff;
+            --color-accent: #ff2a6d;
+            --color-text: #d1f7ff;
+            --color-bg: #05020a;
+            --color-card-bg: rgba(15, 12, 41, 0.3);
+            --glow: 0 0 15px var(--color-secondary);
+            --firebase-blue: #4285F4;
+            --firebase-green: #34A853;
+            --firebase-yellow: #FBBC05;
+            --firebase-red: #EA4335;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--color-bg) 0%, #1a0638 100%);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Partículas de fondo */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(20px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 30px;
+            background: var(--color-card-bg);
+            border: 1px solid rgba(0, 247, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: var(--glow), 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--color-secondary), var(--firebase-blue), var(--color-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            font-size: 1rem;
+            color: rgba(209, 247, 255, 0.7);
+            letter-spacing: 0.5px;
+        }
+
+        .login-form .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-text);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            border-radius: 10px;
+            color: var(--color-text);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-left: 45px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            color: var(--color-secondary);
+            font-size: 1.2rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            cursor: pointer;
+            color: rgba(209, 247, 255, 0.6);
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: var(--color-secondary);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember input {
+            margin-right: 8px;
+            accent-color: var(--color-secondary);
+        }
+
+        .forgot-password {
+            color: var(--color-secondary);
+            text-decoration: none;
+            transition: text-shadow 0.3s;
+        }
+
+        .forgot-password:hover {
+            text-shadow: 0 0 8px rgba(0, 247, 255, 0.8);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--firebase-blue), var(--firebase-green));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(-1px);
+        }
+
+        .register-link {
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .register-link a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: text-shadow 0.3s;
+        }
+
+        .register-link a:hover {
+            text-shadow: 0 0 8px rgba(0, 247, 255, 0.8);
+        }
+
+        /* Animaciones para elementos energéticos */
+        .energy-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(66, 133, 244, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+
+        /* Firebase-style cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Firebase-style badge */
+        .firebase-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--firebase-yellow), var(--firebase-red));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(234, 67, 53, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .input-group input {
+                padding: 12px;
+                padding-left: 40px;
+            }
+            
+            .input-icon {
+                font-size: 1rem;
+                top: 37px;
+            }
+            
+            .password-toggle {
+                top: 37px;
+            }
+            
+            .login-button {
+                padding: 12px;
+            }
+        }
+        
+        /* Firebase-style animation */
+        @keyframes firebase-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(251, 188, 5, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(251, 188, 5, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 188, 5, 0); }
+        }
+        
+        .firebase-animation {
+            animation: firebase-pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="login-container">
+        <!-- Badge estilo Firebase -->
+        <div class="firebase-badge firebase-animation">Firebase Auth</div>
+        
+        <!-- Efecto de pulso energético -->
+        <div class="energy-pulse"></div>
+        
+        <div class="logo">
+            <h1>EnergyNexus</h1>
+            <p>Monitoreo inteligente de energía</p>
+        </div>
+        
+        <form class="login-form">
+            <!-- Card de usuario estilo Firebase -->
+            <div class="card">
+                <div class="input-group">
+                    <label for="username">Usuario</label>
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="username" placeholder="Ingresa tu usuario" required>
+                </div>
+            </div>
+            
+            <!-- Card de contraseña estilo Firebase -->
+            <div class="card">
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+            </div>
+            
+            <div class="remember-forgot">
+                <div class="remember">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Recuérdame</label>
+                </div>
+                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+            </div>
+            
+            <button type="submit" class="login-button">Iniciar sesión</button>
+            
+            <div class="register-link">
+                <p>¿No tienes cuenta? <a href="#">Regístrate ahora</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Crear partículas para el fondo
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Retraso de animación aleatorio
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // Color aleatorio (usando colores Firebase)
+                const colors = [
+                    'rgba(66, 133, 244, 0.7)',    // Google Blue
+                    'rgba(52, 168, 83, 0.7)',     // Google Green
+                    'rgba(251, 188, 5, 0.7)',     // Google Yellow
+                    'rgba(234, 67, 53, 0.7)',     // Google Red
+                    'rgba(0, 247, 255, 0.7)'      // EnergyNexus Cyan
+                ];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Alternar visibilidad de contraseña
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Cambiar icono
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        // Animación al enviar formulario
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const loginButton = document.querySelector('.login-button');
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+            loginButton.disabled = true;
+            
+            // Simular proceso de autenticación
+            setTimeout(() => {
+                loginButton.innerHTML = '<i class="fas fa-check"></i> ¡Bienvenido!';
+                loginButton.style.background = 'linear-gradient(90deg, var(--firebase-green), var(--firebase-blue))';
+                
+                // Redirigir al dashboard después de un breve tiempo
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 1500);
+        });
+        
+        // Inicializar partículas al cargar
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>
